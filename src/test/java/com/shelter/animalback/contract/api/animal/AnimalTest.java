@@ -19,6 +19,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 import java.util.List;
+import static org.mockito.Mockito.doNothing;
 
 @Provider("CatShelterBack")
 @PactBroker(
@@ -47,7 +48,7 @@ public class AnimalTest {
         context.verifyInteraction();
     }
 
-    @State("has animals")
+    @State("has animals to get")
     public void listAnimals() {
         Animal animal = new Animal();
         animal.setName("Bigotes");
@@ -57,5 +58,40 @@ public class AnimalTest {
         List<Animal> animals = new ArrayList<>();
         animals.add(animal);
         Mockito.when(animalService.getAll()).thenReturn(animals);
+    }
+
+    @State("there are no animals")
+    public void saveAnimals() {
+        Animal animal = new Animal();
+        animal.setName("Loli");
+        animal.setBreed("Birmano");
+        animal.setGender("Male");
+        animal.setVaccinated(true);
+        Mockito.when(animalService.save(Mockito.any(Animal.class))).thenReturn(animal);
+    }
+
+    @State("has animal to get")
+    public void getAnimal() {
+        Animal animal = new Animal();
+        animal.setName("Loli");
+        animal.setBreed("Birmano");
+        animal.setGender("Male");
+        animal.setVaccinated(true);
+        Mockito.when(animalService.get(Mockito.any(String.class))).thenReturn(animal);
+    }
+
+    @State("has animals to delete")
+    public void deleteAnimal() {
+        doNothing().when(animalService).delete(Mockito.any(String.class));
+    }
+
+    @State("has animal to update")
+    public void updateAnimal() {
+        Animal animal = new Animal();
+        animal.setName("Loli");
+        animal.setBreed("Birmano");
+        animal.setGender("Male");
+        animal.setVaccinated(true);
+        Mockito.when(animalService.replace(Mockito.any(String.class), Mockito.any(Animal.class))).thenReturn(animal);
     }
 }
